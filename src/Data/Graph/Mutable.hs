@@ -4,6 +4,7 @@ module Data.Graph.Mutable
     insertVertex
   , insertEdge
   , insertEdgeWith
+  , lookupEdge
     -- * Vertices Operations
     -- $mutvertices
   , verticesReplicate
@@ -60,6 +61,10 @@ insertEdgeWith (MGraph _ _ edges) combine (Vertex a) (Vertex b) e = do
   case m of
     Nothing -> HashTable.insert edges (IntPair a b) e
     Just eOld -> HashTable.insert edges (IntPair a b) (combine eOld e)
+
+lookupEdge :: PrimMonad m => MGraph (PrimState m) g e v -> Vertex g -> Vertex g -> m (Maybe e)
+lookupEdge (MGraph _ _ edges) (Vertex a) (Vertex b) =
+  HashTable.lookup edges (IntPair a b)
 
 {- $mutvertices
    Operations that mutate a 'MVertices' or a 'MUVertices'. These functions have nothing
