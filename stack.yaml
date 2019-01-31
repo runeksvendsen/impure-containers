@@ -24,4 +24,4 @@ extra-deps:
 - intern-0.9.1.4
 - located-base-0.1.1.0
 - vector-0.11.0.0
-resolver: lts-6.7
+resolver: lts-8.1
