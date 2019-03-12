@@ -2,6 +2,7 @@ module Data.Graph.Mutable
   ( -- * Graph Operations
     -- $mutgraph
     insertVertex
+  , lookupVertex
   , insertEdge
   , insertEdgeWith
   , lookupEdge
@@ -48,6 +49,11 @@ insertVertex (MGraph vertexIndex currentIdVar _) v = do
       HashTable.insert vertexIndex v currentId
       return (Vertex currentId)
     Just i -> return (Vertex i)
+
+-- | Look up vertex id by vertex label
+lookupVertex :: (PrimMonad m, Hashable v, Eq v) => MGraph (PrimState m) g e v -> v -> m (Maybe (Vertex g))
+lookupVertex (MGraph vertexIndex _ _) v =
+  fmap Vertex <$> HashTable.lookup vertexIndex v
 
 -- | This replaces the edge if it already exists. If you pass the same vertex
 --   as the source and the destination, this function has no effect.
@@ -100,4 +106,3 @@ verticesURead (MUVertices mvec) (Vertex ix) = MU.unsafeRead mvec ix
 
 verticesRead :: PrimMonad m => MVertices (PrimState m) g v -> Vertex g -> m v
 verticesRead (MVertices mvec) (Vertex ix) = MV.unsafeRead mvec ix
-
